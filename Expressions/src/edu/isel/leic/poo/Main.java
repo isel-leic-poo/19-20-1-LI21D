@@ -2,26 +2,29 @@ package edu.isel.leic.poo;
 
 import java.util.Scanner;
 
-import static edu.isel.leic.poo.Evaluator.evaluate;
 import static edu.isel.leic.poo.Parser.parse;
 
 public class Main {
 
-    private static String prettyPrint(ASTNode expression) {
+    private static String prettyPrint(Expression expression) {
 
-        if (expression.isNumber())
-            return Integer.toString(expression.number);
+        if (expression instanceof Constant) {
+            Constant constant = (Constant) expression;
+            return Integer.toString(constant.number);
+        }
 
-        return prettyPrint(expression.left) + ' '
-                + expression.operation + ' '
-                + prettyPrint(expression.right);
+        Operation operation = (Operation) expression;
+        return prettyPrint(operation.left) + ' '
+                + operation.operation + ' '
+                + prettyPrint(operation.right);
     }
 
     public static void main(String[] args) {
+
         final Scanner in = new Scanner(System.in);
-        final ASTNode expression = parse(in.nextLine());
+        final Expression expression = parse(in.nextLine());
         System.out.println(
-                prettyPrint(expression) + " = " + evaluate(expression)
+                prettyPrint(expression) + " = " + expression.evaluate()
         );
     }
 }

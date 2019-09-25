@@ -44,16 +44,16 @@ public class Parser {
         return true;
     }
 
-    private static ASTNode parse(ArrayList<String> tokens) {
+    private static Expression parse(ArrayList<String> tokens) {
         final String token = tokens.remove(0);
 
         if (isNumber(token))
-            return new ASTNode(Integer.parseInt(token));
+            return new Constant(Integer.parseInt(token));
 
-        return new ASTNode(token.charAt(0), parse(tokens), parse(tokens));
+        return new Operation(token.charAt(0), parse(tokens), parse(tokens));
     }
 
-    public static ASTNode parse(String expression) {
+    public static Expression parse(String expression) {
         final ArrayList<String> tokens = tokenize(expression);
         return parse(tokens);
     }

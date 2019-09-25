@@ -4,20 +4,17 @@ public class Main {
 
     public static void main(String[] args) {
 
-        DynamicArray array = new DynamicArray();
+        LinkedList<String> list = new LinkedList<>();
+        list.addFirst("SLB, O MAIOR");
 
-        array.add("SLB");
-        array.add("GLORIOSO");
-        array.add("37");
+        String str = list.get(0);
 
-        for (int i = 0; i < array.size(); i++) {
-            System.out.println(array.get(i));
-        }
+        LinkedList<Integer> listInts = new LinkedList<>();
+        int value = 1;
+        listInts.add(value);
+        int val = listInts.get(0);
 
-        int[] arr = new int[] { 1, 2 , 3};
-        for (int elem : arr) {
-            System.out.println(elem);
-        }
+        Integer aValue = Integer.valueOf(1);
 
     }
 }
