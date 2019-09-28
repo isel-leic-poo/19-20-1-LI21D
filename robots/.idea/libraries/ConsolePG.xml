@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="ConsolePG">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/ConsolePG.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/libs/ConsolePG.jar!/docs" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
