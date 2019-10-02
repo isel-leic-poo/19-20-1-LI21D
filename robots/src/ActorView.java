@@ -1,14 +1,15 @@
 import isel.leic.pg.Console;
+import model.Actor;
 
 /**
- * Represents the hero view in the Robots game.
+ * Represents the actors view in the Robots game.
  */
-public class HeroView {
+public class ActorView {
 
     /**
-     * The hero instance
+     * The actor instance
      */
-    private final Hero hero;
+    private final Actor actor;
 
     /**
      * The color to be used to paint the hero
@@ -21,13 +22,13 @@ public class HeroView {
     private final char face;
 
     /**
-     * Initiates the view withe the given parameters
-     * @param hero  the hero instance
+     * Initiates the view with the given parameters
+     * @param actor the actor instance
      * @param color the view's color
      * @param face  the view's character
      */
-    public HeroView(Hero hero, int color, char face) {
-        this.hero = hero;
+    public ActorView(Actor actor, int color, char face) {
+        this.actor = actor;
         this.color = color;
         this.face = face;
     }
@@ -36,7 +37,7 @@ public class HeroView {
      * Paints the hero at its current position
      */
     public void draw() {
-        Console.cursor(hero.getPosition().y, hero.getPosition().x);
+        Console.cursor(actor.getPosition().y, actor.getPosition().x);
         Console.setForeground(color);
         Console.print(face);
     }
@@ -45,7 +46,7 @@ public class HeroView {
      * Clears the view
      */
     public void clear() {
-        Console.cursor(hero.getPosition().y, hero.getPosition().x);
+        Console.cursor(actor.getPosition().y, actor.getPosition().x);
         Console.setForeground(color);
         Console.print(' ');
     }

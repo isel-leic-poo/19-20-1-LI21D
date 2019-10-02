@@ -1,47 +1,55 @@
 import isel.leic.pg.Console;
+import model.Game;
+import model.Hero;
+import model.Villain;
 
 public class Main {
 
-    private static void moveHero(HeroView view, Hero hero, int dx, int dy) {
-        view.clear();
-        hero.moveBy(dx, dy);
-        view.draw();
+    public static final int LINES = 20;
+    public static final int COLS = 40;
+
+    private static boolean moveStuff(GameView gameView, int dx, int dy) {
+        gameView.clear();
+        gameView.game.hero.moveBy(dx, dy);
+        gameView.game.villain.moveTowards(gameView.game.hero.getPosition());
+        gameView.draw();
+        return gameView.game.isOver();
     }
 
     public static void main(String[] args) {
-        Console.open("Robots",20,40);
-        final Hero hero = new Hero(20, 10);
-        final HeroView heroView = new HeroView(hero, Console.RED, '@');
+        Console.open("Robots", LINES, COLS);
+
+        final GameView gameView = new GameView(new Game(COLS, LINES));
+        gameView.draw();
 
         char key = 0;
 
-        heroView.draw();
-
-        while ((key = Console.waitChar(0)) != ' ') {
+        boolean gameOver = false;
+        while ((key = Console.waitChar(0)) != ' ' && !gameOver) {
             switch (key) {
                 case 'q':
-                    moveHero(heroView, hero, -1, -1);
+                    gameOver = moveStuff(gameView,-1, -1);
                     break;
                 case 'w':
-                    moveHero(heroView, hero, 0, -1);
+                    gameOver = moveStuff(gameView, 0, -1);
                     break;
                 case 'e':
-                    moveHero(heroView, hero, 1, -1);
+                    gameOver = moveStuff(gameView, 1, -1);
                     break;
                 case 'a':
-                    moveHero(heroView, hero, -1, 0);
+                    gameOver = moveStuff(gameView, -1, 0);
                     break;
                 case 'd':
-                    moveHero(heroView, hero, 1, 0);
+                    gameOver = moveStuff(gameView, 1, 0);
                     break;
                 case 'z':
-                    moveHero(heroView, hero, -1, 1);
+                    gameOver = moveStuff(gameView, -1, 1);
                     break;
                 case 'x':
-                    moveHero(heroView, hero, 0, 1);
+                    gameOver = moveStuff(gameView, 0, 1);
                     break;
                 case 'c':
-                    moveHero(heroView, hero, 1, 1);
+                    gameOver = moveStuff(gameView, 1, 1);
                     break;
             }
         }

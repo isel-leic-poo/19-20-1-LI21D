@@ -1,3 +1,5 @@
+package model;
+
 /**
  * Class used to represent coordinates on the robots game board.
  */
