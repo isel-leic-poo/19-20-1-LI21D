@@ -1,6 +1,5 @@
 import isel.leic.pg.Console;
 import model.Game;
-import model.Hero;
 import model.Villain;
 
 public class Main {
@@ -10,8 +9,7 @@ public class Main {
 
     private static boolean moveStuff(GameView gameView, int dx, int dy) {
         gameView.clear();
-        gameView.game.hero.moveBy(dx, dy);
-        gameView.game.villain.moveTowards(gameView.game.hero.getPosition());
+        gameView.game.moveHeroBy(dx, dy);
         gameView.draw();
         return gameView.game.isOver();
     }
