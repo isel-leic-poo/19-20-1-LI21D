@@ -10,16 +10,23 @@ public class Game {
 
     public final Hero hero;
     public final LinkedList<Villain> villains;
+    public final LinkedList<JunkPile> junk;
     private final Actor[][] board;
 
     private void detectCollisions() {
 
         LinkedList<Villain> deadVillains = new LinkedList<>();
         for (Villain villain : villains) {
-            if (board[villain.getPosition().x][villain.getPosition().y] != villain) {
+            final int x = villain.getPosition().x;
+            final int y = villain.getPosition().y;
+            if (board[x][y] != null && board[x][y] != villain) {
                 deadVillains.add(villain);
-                deadVillains.add((Villain) board[villain.getPosition().x][villain.getPosition().y]);
-                board[villain.getPosition().x][villain.getPosition().y] = null;
+                if (!(board[x][y] instanceof JunkPile)) {
+                    deadVillains.add((Villain) board[x][y]);
+                    final JunkPile pile = new JunkPile(x, y);
+                    board[x][y] = pile;
+                    junk.add(pile);
+                }
             }
         }
 
@@ -35,6 +42,8 @@ public class Game {
      */
     public Game(int width, int height) {
         hero = new Hero(20, 10, width, height);
+        junk = new LinkedList<>();
+
         villains = new LinkedList<>();
         villains.add(new Villain(0, 0));
         villains.add(new Villain(width - 1, 0));
@@ -54,8 +63,16 @@ public class Game {
      */
     public boolean isOver() {
         for (Villain villain : villains) {
-            if (hero.getPosition().x == villain.getPosition().x &&
-                    hero.getPosition().y == villain.getPosition().y)
+            final int heroX = hero.getPosition().x;
+            final int heroY = hero.getPosition().y;
+            if (heroX == villain.getPosition().x && heroY == villain.getPosition().y)
+                return true;
+        }
+
+        for (JunkPile junkPile : junk) {
+            final int heroX = hero.getPosition().x;
+            final int heroY = hero.getPosition().y;
+            if (heroX == junkPile.getPosition().x && heroY == junkPile.getPosition().y)
                 return true;
         }
         return false;
@@ -67,9 +84,11 @@ public class Game {
      * @param dy the vertical delta
      */
     public void moveHeroBy(int dx, int dy) {
-        board[hero.getPosition().x][hero.getPosition().y] = null;
+        final int heroX = hero.getPosition().x;
+        final int heroY = hero.getPosition().y;
+        board[heroX][heroY] = null;
         hero.moveBy(dx, dy);
-        board[hero.getPosition().x][hero.getPosition().y] = hero;
+        board[heroX][heroY] = hero;
 
         for (Villain villain : villains) {
             board[villain.getPosition().x][villain.getPosition().y] = null;

@@ -1,6 +1,5 @@
 import isel.leic.pg.Console;
 import model.Game;
-import model.Villain;
 
 public class Main {
 
