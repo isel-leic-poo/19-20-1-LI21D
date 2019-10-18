@@ -1,17 +1,31 @@
 package model;
 
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Represents the Robots game state
  */
 public class Game {
 
+    /**
+     * Contract to be supported by listeners of game events
+     */
+    public interface GameListener {
+        
+        /**
+         * Signals that a villain has died
+         * @param villain   the corpse
+         * @param junkPile  the junk pile that replaced the villain in the board
+         */
+        void onVillainDeath(Villain villain, JunkPile junkPile);
+    }
+
     public final Hero hero;
     public final LinkedList<Villain> villains;
     public final LinkedList<JunkPile> junk;
     private final Actor[][] board;
+
+    private GameListener listener;
 
     private void detectCollisions() {
 
@@ -28,10 +42,21 @@ public class Game {
                     junk.add(pile);
                 }
             }
+            else {
+                for (JunkPile junkPile: junk) {
+                    if (villain.getPosition().equals(junkPile.getPosition())) {
+                        deadVillains.add(villain);
+                        board[x][y] = junkPile;
+                    }
+                }
+            }
         }
 
         for (Villain deadVillain : deadVillains) {
             villains.remove(deadVillain);
+            final JunkPile pile = (JunkPile) board[deadVillain.getPosition().x][deadVillain.getPosition().y];
+            if (listener != null)
+                listener.onVillainDeath(deadVillain, pile);
         }
     }
 
@@ -43,6 +68,7 @@ public class Game {
     public Game(int width, int height) {
         hero = new Hero(20, 10, width, height);
         junk = new LinkedList<>();
+        junk.add(new JunkPile(1, 1));
 
         villains = new LinkedList<>();
         villains.add(new Villain(0, 0));
@@ -62,19 +88,20 @@ public class Game {
      * @return A boolean value indicating if the game is over or not.
      */
     public boolean isOver() {
+
+        if (villains.isEmpty())
+            return true;
+
         for (Villain villain : villains) {
-            final int heroX = hero.getPosition().x;
-            final int heroY = hero.getPosition().y;
-            if (heroX == villain.getPosition().x && heroY == villain.getPosition().y)
+            if (hero.getPosition().equals(villain.getPosition()))
                 return true;
         }
 
         for (JunkPile junkPile : junk) {
-            final int heroX = hero.getPosition().x;
-            final int heroY = hero.getPosition().y;
-            if (heroX == junkPile.getPosition().x && heroY == junkPile.getPosition().y)
+            if (hero.getPosition().equals(junkPile.getPosition()))
                 return true;
         }
+
         return false;
     }
 
@@ -97,5 +124,13 @@ public class Game {
         }
 
         detectCollisions();
+    }
+
+    /**
+     * Register the given listener to be notified when relevant game events occur
+     * @param listener  the listener instance
+     */
+    public void setGameListener(GameListener listener) {
+        this.listener = listener;
     }
 }

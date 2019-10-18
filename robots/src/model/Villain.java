@@ -28,5 +28,4 @@ public class Villain extends Actor {
         position = new Coordinate(position.x + dx, position.y + dy);
         return position;
     }
-
 }

@@ -1,3 +1,5 @@
+package view;
+
 import isel.leic.pg.Console;
 import model.Actor;
 
@@ -9,7 +11,7 @@ public class ActorView {
     /**
      * The actor instance
      */
-    private final Actor actor;
+    public final Actor actor;
 
     /**
      * The color to be used to paint the hero
