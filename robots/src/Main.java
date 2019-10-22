@@ -1,7 +1,6 @@
 import isel.leic.pg.Console;
-import model.Actor;
 import model.Game;
-import model.Villain;
+import view.AnotherGameView;
 import view.GameView;
 
 public class Main {
@@ -13,7 +12,8 @@ public class Main {
 
         Console.open("Robots", LINES, COLS);
 
-        final GameView gameView = new GameView(new Game(COLS, LINES));
+        //final GameView gameView = new GameView(new Game(COLS, LINES));
+        final AnotherGameView gameView = new AnotherGameView(new Game(COLS/2, LINES/2), COLS/2, LINES/2);
 
         char key;
 
