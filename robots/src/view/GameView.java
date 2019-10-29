@@ -2,39 +2,25 @@ package view;
 
 import isel.leic.pg.Console;
 
-import model.Game;
-import model.JunkPile;
-import model.Villain;
+import model.*;
 
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Represents the Robots game view
+ * Represents the Robots game view. The view implementation does not use the
+ * Observer pattern.
  */
-public class GameView implements Game.GameListener {
+public class GameView {
 
     private final Game game;
     private final ActorView heroView;
-    private final List<ActorView> hazardsViews;
+    private List<ActorView> hazardsViews;
 
-    @Override
-    public void onVillainDeath(Villain villain, JunkPile junkPile) {
-        ActorView viewToRemove = null;
-        for (ActorView view : hazardsViews) {
-            if (view.actor == villain) {
-                viewToRemove = view;
-                break;
-            }
-        }
-        hazardsViews.remove(viewToRemove);
-        hazardsViews.add(new ActorView(junkPile, Console.WHITE, '*'));
-    }
-
-    public GameView(Game game) {
-        this.game = game;
-        game.setGameListener(this);
-        heroView = new ActorView(game.hero, Console.RED, '@');
+    /**
+     * Builds the views that are used to display the game's hazards (i.e. villains and junk piles)
+     */
+    private void buildHazardViews() {
         hazardsViews = new LinkedList<>();
 
         for (Villain villain : game.villains) {
@@ -44,23 +30,44 @@ public class GameView implements Game.GameListener {
         for (JunkPile junkPile : game.junk) {
             hazardsViews.add(new ActorView(junkPile, Console.WHITE, '*'));
         }
+    }
 
+    /**
+     * Initiates an instance with the given game.
+     * @param game  the model instance
+     */
+    public GameView(Game game) {
+        this.game = game;
+        heroView = new ActorView(game.hero, Console.RED, '@');
+
+        buildHazardViews();
         draw();
     }
 
-    public boolean moveStuff(int dx, int dy) {
+    /**
+     * Moves the heroby the given deltas.
+     * @param dx    the horizontal delta
+     * @param dy    the vertical delta
+     */
+    public void moveHero(int dx, int dy) {
         clear();
         game.moveHeroBy(dx, dy);
+        buildHazardViews();
         draw();
-        return game.isOver();
     }
 
+    /**
+     * Draws the views
+     */
     private void draw() {
         heroView.draw();
         for (ActorView view : hazardsViews)
             view.draw();
     }
 
+    /**
+     * Clears the views
+     */
     private void clear() {
         heroView.clear();
         for (ActorView view : hazardsViews)

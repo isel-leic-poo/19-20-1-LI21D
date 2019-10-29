@@ -1,51 +1,95 @@
 import isel.leic.pg.Console;
 import model.Game;
-import view.AnotherGameView;
+import view.TiledGameView;
 import view.GameView;
 
 public class Main {
 
-    private static final int LINES = 20;
-    private static final int COLS = 40;
+    private static final int WINDOW_LINES = 30;
+    private static final int WINDOW_COLS = 50;
 
-    public static void main(String[] args) {
-
-        Console.open("Robots", LINES, COLS);
-
-        //final GameView gameView = new GameView(new Game(COLS, LINES));
-        final AnotherGameView gameView = new AnotherGameView(new Game(COLS/2, LINES/2), COLS/2, LINES/2);
+    private static void runWithConsoleView() {
+        final Game model = new Game(WINDOW_COLS, WINDOW_LINES);
+        final GameView view = new GameView(model);
 
         char key;
-
-        boolean gameOver = false;
-        while ((key = Console.waitChar(0)) != ' ' && !gameOver) {
+        while ((key = Console.waitChar(0)) != ' ' && !model.isOver()) {
             switch (key) {
                 case 'q':
-                    gameOver = gameView.moveStuff(-1, -1);
+                    view.moveHero(-1, -1);
                     break;
                 case 'w':
-                    gameOver = gameView.moveStuff( 0, -1);
+                    view.moveHero(0, -1);
                     break;
                 case 'e':
-                    gameOver = gameView.moveStuff(1, -1);
+                    view.moveHero(1, -1);
                     break;
                 case 'a':
-                    gameOver = gameView.moveStuff(-1, 0);
+                    view.moveHero(-1, 0);
                     break;
                 case 'd':
-                    gameOver = gameView.moveStuff(1, 0);
+                    view.moveHero(1, 0);
                     break;
                 case 'z':
-                    gameOver = gameView.moveStuff(-1, 1);
+                    view.moveHero(-1, 1);
                     break;
                 case 'x':
-                    gameOver = gameView.moveStuff(0, 1);
+                    view.moveHero(0, 1);
                     break;
                 case 'c':
-                    gameOver = gameView.moveStuff(1, 1);
+                    view.moveHero(1, 1);
                     break;
             }
         }
+    }
+
+    private static void runWithTiledView() {
+        final int SIDE = 2;
+        final int BOARD_LINES = WINDOW_LINES / SIDE;
+        final int BOARD_COLS = WINDOW_COLS / SIDE;
+
+        final Game model = new Game(BOARD_COLS, BOARD_LINES);
+        final TiledGameView view = new TiledGameView(model, BOARD_COLS, BOARD_LINES, SIDE);
+        char key;
+
+        while ((key = Console.waitChar(0)) != ' ' && !model.isOver()) {
+            switch (key) {
+                case 'q':
+                    model.moveHeroBy(-1, -1);
+                    break;
+                case 'w':
+                    model.moveHeroBy(0, -1);
+                    break;
+                case 'e':
+                    model.moveHeroBy(1, -1);
+                    break;
+                case 'a':
+                    model.moveHeroBy(-1, 0);
+                    break;
+                case 'd':
+                    model.moveHeroBy(1, 0);
+                    break;
+                case 'z':
+                    model.moveHeroBy(-1, 1);
+                    break;
+                case 'x':
+                    model.moveHeroBy(0, 1);
+                    break;
+                case 'c':
+                    model.moveHeroBy(1, 1);
+                    break;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Console.open("Robots", WINDOW_LINES, WINDOW_COLS);
+
+        if (args.length != 0 && args[0].equals("tiled"))
+            runWithTiledView();
+        else
+            runWithConsoleView();
 
         Console.close();
     }
