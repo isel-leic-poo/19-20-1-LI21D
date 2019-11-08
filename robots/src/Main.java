@@ -1,13 +1,18 @@
 import isel.leic.pg.Console;
+import isel.leic.pg.Location;
+import isel.leic.pg.MouseEvent;
 import model.Game;
 import view.TiledGameView;
 import view.GameView;
+
+import java.awt.event.KeyEvent;
 
 public class Main {
 
     private static final int WINDOW_LINES = 30;
     private static final int WINDOW_COLS = 50;
 
+    // TODO: Fix ugly As Hell dispatch loop
     private static void runWithConsoleView() {
         final Game model = new Game(WINDOW_COLS, WINDOW_LINES);
         final GameView view = new GameView(model);
@@ -49,8 +54,11 @@ public class Main {
         final int BOARD_COLS = WINDOW_COLS / SIDE;
 
         final Game model = new Game(BOARD_COLS, BOARD_LINES);
-        final TiledGameView view = new TiledGameView(model, BOARD_COLS, BOARD_LINES, SIDE);
+        new TiledGameView(model, BOARD_COLS, BOARD_LINES, SIDE);
         char key;
+
+
+        Console.enableMouseEvents(false);
 
         while ((key = Console.waitChar(0)) != ' ' && !model.isOver()) {
             switch (key) {

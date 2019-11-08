@@ -1,11 +1,33 @@
 package model;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
  * Represents the Robots game state
  */
-public class Game {
+public class Game implements Iterable<Actor> {
+
+    @Override
+    public Iterator<Actor> iterator() {
+        return new Iterator<>() {
+            private Iterator<Villain> villainIterator = villains.iterator();
+            private Iterator<JunkPile> junkPileIterator = junk.iterator();
+
+            @Override
+            public boolean hasNext() {
+                return villainIterator.hasNext() || junkPileIterator.hasNext();
+            }
+
+            @Override
+            public Actor next() {
+                if (villainIterator.hasNext())
+                    return villainIterator.next();
+
+                return junkPileIterator.next();
+            }
+        };
+    }
 
     /**
      * Contract to be supported by listeners of game events
@@ -27,10 +49,10 @@ public class Game {
         void onActorMoved(Actor actor, Coordinate from);
     }
 
-    // TODO: These public fields should be private
     public final Hero hero;
-    public final LinkedList<Villain> villains;
-    public final LinkedList<JunkPile> junk;
+
+    private final LinkedList<Villain> villains;
+    private final LinkedList<JunkPile> junk;
     private final Actor[][] board;
     private LinkedList<GameListener> listeners;
 
@@ -38,6 +60,8 @@ public class Game {
      * Method used to detect collisions between actors. This method is called each time the player makes a move.
      */
     private void detectCollisions() {
+
+        // TODO: Fix this :s
 
         LinkedList<Villain> deadVillains = new LinkedList<>();
         for (Villain villain : villains) {

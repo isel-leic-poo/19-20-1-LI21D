@@ -23,12 +23,14 @@ public class GameView {
     private void buildHazardViews() {
         hazardsViews = new LinkedList<>();
 
-        for (Villain villain : game.villains) {
-            hazardsViews.add(new ActorView(villain, Console.WHITE, '+'));
-        }
-
-        for (JunkPile junkPile : game.junk) {
-            hazardsViews.add(new ActorView(junkPile, Console.WHITE, '*'));
+        for (Actor actor : game) {
+            hazardsViews.add(
+                new ActorView(
+                    actor,
+                    Console.WHITE,
+                    actor instanceof Villain ? '+' : '*'
+                )
+            );
         }
     }
 
