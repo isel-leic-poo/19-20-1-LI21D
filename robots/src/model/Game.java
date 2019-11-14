@@ -142,17 +142,17 @@ public class Game implements Iterable<Actor> {
 
     /**
      * Displaces the hero the given delta coordinates
-     * @param dx the horizontal delta
-     * @param dy the vertical delta
+     * @param lineDelta the horizontal delta
+     * @param columnDelta the vertical delta
      */
-    public void moveHeroBy(int dx, int dy) {
+    public void moveHeroBy(int lineDelta, int columnDelta) {
 
         // Move hero
         final Coordinate start = hero.getPosition();
         final int heroX = start.x;
         final int heroY = start.y;
         board[heroX][heroY] = null;
-        hero.moveBy(dx, dy);
+        hero.moveBy(lineDelta, columnDelta);
         board[heroX][heroY] = hero;
 
         notifyActorMoved(hero, start);
@@ -169,6 +169,14 @@ public class Game implements Iterable<Actor> {
 
         // Check what has happened
         detectCollisions();
+    }
+
+    /**
+     *
+     * @param direction
+     */
+    public void moveHeroBy(Direction direction) {
+        moveHeroBy(direction.dy, direction.dx);
     }
 
     /**

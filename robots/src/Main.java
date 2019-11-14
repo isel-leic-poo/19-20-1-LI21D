@@ -1,24 +1,41 @@
 import isel.leic.pg.Console;
-import isel.leic.pg.Location;
-import isel.leic.pg.MouseEvent;
+import model.Actor;
+import model.Direction;
 import model.Game;
-import view.TiledGameView;
 import view.GameView;
+import view.TiledGameView;
 
-import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
+
+import static model.Direction.*;
 
 public class Main {
 
     private static final int WINDOW_LINES = 30;
     private static final int WINDOW_COLS = 50;
 
-    // TODO: Fix ugly As Hell dispatch loop
+    private static Map<Character, Direction> initializeKeyMap() {
+        Map<Character, Direction> keyMap = new HashMap<>();
+        keyMap.put('q', NW);
+        keyMap.put('w', N);
+        keyMap.put('e', NE);
+        keyMap.put('a', W);
+        keyMap.put('d', E);
+        keyMap.put('z', SW);
+        keyMap.put('x', S);
+        keyMap.put('c', SE);
+        return keyMap;
+    }
+
+    private static final Map<Character, Direction> keyMap = initializeKeyMap();
+    private static final EventLoop eventLoop = new EventLoop();
+
     private static void runWithConsoleView() {
         final Game model = new Game(WINDOW_COLS, WINDOW_LINES);
         final GameView view = new GameView(model);
 
-        char key;
-        while ((key = Console.waitChar(0)) != ' ' && !model.isOver()) {
+        eventLoop.registerKeyListener(key -> {
             switch (key) {
                 case 'q':
                     view.moveHero(-1, -1);
@@ -45,7 +62,12 @@ public class Main {
                     view.moveHero(1, 1);
                     break;
             }
-        }
+        });
+
+        eventLoop.run(new EventLoop.Predicate() {
+            @Override
+            public boolean evaluate() { return model.isOver(); }
+        });
     }
 
     private static void runWithTiledView() {
@@ -55,39 +77,16 @@ public class Main {
 
         final Game model = new Game(BOARD_COLS, BOARD_LINES);
         new TiledGameView(model, BOARD_COLS, BOARD_LINES, SIDE);
-        char key;
 
+        eventLoop.registerKeyListener(key -> {
+            final Direction dir = keyMap.get(key);
+            model.moveHeroBy(dir);
+        });
 
-        Console.enableMouseEvents(false);
-
-        while ((key = Console.waitChar(0)) != ' ' && !model.isOver()) {
-            switch (key) {
-                case 'q':
-                    model.moveHeroBy(-1, -1);
-                    break;
-                case 'w':
-                    model.moveHeroBy(0, -1);
-                    break;
-                case 'e':
-                    model.moveHeroBy(1, -1);
-                    break;
-                case 'a':
-                    model.moveHeroBy(-1, 0);
-                    break;
-                case 'd':
-                    model.moveHeroBy(1, 0);
-                    break;
-                case 'z':
-                    model.moveHeroBy(-1, 1);
-                    break;
-                case 'x':
-                    model.moveHeroBy(0, 1);
-                    break;
-                case 'c':
-                    model.moveHeroBy(1, 1);
-                    break;
-            }
-        }
+        eventLoop.run(new EventLoop.Predicate() {
+            @Override
+            public boolean evaluate() { return model.isOver(); }
+        });
     }
 
     public static void main(String[] args) {
