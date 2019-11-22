@@ -16,6 +16,9 @@ public class MainActivity extends Activity {
     private static final int COUNTER_VIEW_ID = 1000;
     private static final int INC_BUTTON_ID = 1001;
     private static final int DEC_BUTTON_ID = 1002;
+    private static final int COUNTER_CTRL_ID = 1003;
+
+    public static final String TAG = "COUNTER_APP";
 
     @SuppressLint("ResourceType")
     private void inflate() {
@@ -41,36 +44,52 @@ public class MainActivity extends Activity {
         layout.addView(incButton);
         layout.addView(decButton);
 
+        final CounterControl ctrl = new CounterControl(this);
+        ctrl.setId(COUNTER_CTRL_ID);
+        final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        ctrl.setLayoutParams(params);
+        layout.addView(ctrl);
+
         setContentView(layout);
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v("HELLO_ANDROID", "onCreate() starts");
+        Log.v(TAG, "onCreate() starts");
         inflate();
 
         Counter model = new Counter();
         TextView counterView = findViewById(COUNTER_VIEW_ID);
         counterView.setText(model.toString());
 
+        CounterControl ctrl = findViewById(COUNTER_CTRL_ID);
+        ctrl.setModel(model);
+
         final Button incButton = findViewById(INC_BUTTON_ID);
         incButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("HELLO_ANDROID", "incButton clicked");
-                counterView.setText(model.increment().toString());
-                counterView.setTextSize(model.getValue()*10);
+                Log.v(TAG, "incButton clicked");
+                model.increment();
             }
         });
 
         final Button decButton = findViewById(DEC_BUTTON_ID);
         decButton.setOnClickListener(v -> {
-            Log.v("HELLO_ANDROID", "decButton clicked");
-            counterView.setText(model.decrement().toString());
-            counterView.setTextSize(model.getValue()*10);
+            Log.v(TAG, "decButton clicked");
+            model.decrement();
         });
 
-        Log.v("HELLO_ANDROID", "onCreate() ends");
+        model.addListener(new Counter.OnValueChangedListener() {
+            @Override
+            public void valueChanged(Counter source) {
+                counterView.setText(model.toString());
+            }
+        });
+
+        Log.v(TAG, "onCreate() ends");
     }
 }
