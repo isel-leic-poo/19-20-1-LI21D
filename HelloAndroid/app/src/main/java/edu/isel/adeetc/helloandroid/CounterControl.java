@@ -33,10 +33,8 @@ public class CounterControl extends View {
                     event.getPointerCoords(0, end);
                     if (end.y - start.y < 0) model.increment();
                     else model.decrement();
-
                 }
-                Log.v(MainActivity.TAG, "onTouch() " +
-                        event.getAction());
+                Log.v(MainActivity.TAG, "onTouch() " + event.getAction());
                 return true;
             }
         });
@@ -52,10 +50,7 @@ public class CounterControl extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.v(MainActivity.TAG, "onDraw(): width = "
-                + getWidth() + " ; height = "
-                + getHeight());
-
+        Log.v(MainActivity.TAG, "onDraw(): width = " + getWidth() + " ; height = " + getHeight());
         int value = model == null ? 0 : model.getValue();
         int height = getHeight() / 2 - value * 100;
         canvas.drawLine(0, height, getWidth(), height, brush);

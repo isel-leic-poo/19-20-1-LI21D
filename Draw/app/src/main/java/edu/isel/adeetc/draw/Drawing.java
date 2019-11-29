@@ -19,4 +19,18 @@ public class Drawing implements Iterable<Figure> {
         figures.add(figure);
         return this;
     }
+
+    public String toJSON() {
+        final StringBuilder json = new StringBuilder("[ ");
+        final Iterator<Figure> itr = figures.iterator();
+        while (itr.hasNext()) {
+            final Figure figure = itr.next();
+            json.append(figure.toJSON());
+            if (itr.hasNext())
+                json.append(", ");
+        }
+
+        json.append(" ]");
+        return json.toString();
+    }
 }

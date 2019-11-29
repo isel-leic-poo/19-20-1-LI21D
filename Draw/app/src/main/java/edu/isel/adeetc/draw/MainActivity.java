@@ -4,10 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Drawing model;
 
     @SuppressLint("ResourceType")
     private void inflate() {
@@ -29,6 +32,15 @@ public class MainActivity extends AppCompatActivity {
         inflate();
 
         final DrawView view = findViewById(Globals.DRAW_VIEW_ID);
-        view.setModel(new Drawing());
+        view.setModel(model = new Drawing());
+        Log.v("WOOOOOOOW", "onCreate()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        Log.v("WOOOOOOOW", "onStop()");
+        Log.v("WOOOOOOOW", model.toJSON());
     }
 }
