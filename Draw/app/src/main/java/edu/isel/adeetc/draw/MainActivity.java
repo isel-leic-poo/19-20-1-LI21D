@@ -8,9 +8,18 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 public class MainActivity extends AppCompatActivity {
 
     private Drawing model;
+    private String filename;
+
 
     @SuppressLint("ResourceType")
     private void inflate() {
@@ -34,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         final DrawView view = findViewById(Globals.DRAW_VIEW_ID);
         view.setModel(model = new Drawing());
         Log.v("WOOOOOOOW", "onCreate()");
+
+        filename = getFilesDir().getAbsolutePath() + "/savedData.txt";
     }
 
     @Override
@@ -41,6 +52,38 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
         Log.v("WOOOOOOOW", "onStop()");
-        Log.v("WOOOOOOOW", model.toJSON());
+
+        try (PrintWriter file = new PrintWriter(new FileWriter(filename))) {
+            file.println(model.toJSON());
+        }
+        catch (IOException ioe) {
+            // Do something. Help?
+            // ERRORS MUST BE HANDLED!!!
+            // THIS IS A DEMO, OK?
+        }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v("WOOOOOOOW", "onStart()");
+
+        try (BufferedReader file = new BufferedReader(new FileReader(filename))) {
+            final String modelContent = file.readLine();
+            Log.v("WOOOOOOOW\"", modelContent);
+        }
+        catch (IOException ioe) {
+            // Do something. Help?
+            // ERRORS MUST BE HANDLED!!!
+            // THIS IS A DEMO, OK?
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v("WOOOOOOOW", "onDestroy()");
+    }
+
+
 }
