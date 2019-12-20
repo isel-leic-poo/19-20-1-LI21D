@@ -13,11 +13,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         app:gridLine="1"
-        app:heightTiles="1"
+        app:heightTiles="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:widthTiles="1" />
+        app:widthTiles="3" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

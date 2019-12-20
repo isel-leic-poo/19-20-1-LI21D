@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import edu.isel.adeetc.androids.R;
 import edu.isel.adeetc.androids.view.RobotTile;
+import edu.isel.adeetc.poo.Tile;
 import edu.isel.adeetc.poo.TilePanel;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,6 +16,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final TilePanel board = findViewById(R.id.tilePanel);
-        board.setTile(0, 0, new RobotTile(this));
+        Tile aTile = new RobotTile(this);
+        board.setTile(0, 0, aTile);
+        Tile anotherTile = new RobotTile(this);
+
+        board.setTile(1, 1, anotherTile);
+        board.setTile(2, 2, new RobotTile(this));
     }
 }
